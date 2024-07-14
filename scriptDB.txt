@@ -1,0 +1,76 @@
+
+CREATE TABLE product (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    image VARCHAR(255),
+    price DOUBLE,
+    title VARCHAR(255),
+    description VARCHAR(600),
+    cateID INT,
+    sell_ID INT
+);
+
+
+
+INSERT INTO product (name, image, price, title, description, cateID, sell_ID) VALUES
+('GIÀY ADIZERI ADIDAS 3', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/racer-tr23-shoes-kids-white-ig4921-06-standard.jpg?v=1698892108597', 100000, 'Giày thể thao nam Adidas', 'The Adizero Adios Pro 3 is the pinnacle of Adizero Racing products. It was built with and for athletes to achieve unbelievable feats. These adidas running shoes are made to optimize running efficiency. Our carbon-infused ENERGYRODS 2.0 provide lightweight stiffness for a snappy, efficient stride', 1, 1),
+('GIÀY NIKE INVINCIBLE 3', 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/e3e4cd0f-2ee8-4ced-8780-d989124cd3f2/invincible-3-road-running-shoes-T8cvrp.png', 120000, 'Giày chạy bộ Nike', 'Experience a breathable Flyknit upper and the robust platform of lightweight ZoomX foam that softens impact. Plus, the midsole of this model is wider and taller than the last for even more cushioned comfort', 2, 5),
+('GIÀY ADIZERO TAKUMI 10', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/giay-chay-bo-switch-fwd-djen-id1788-06-standard.jpg?v=1693967232903', 123000, 'Giày chạy bộ nam Adidas', 'Chase your fastest 10k in our latest Adizero racing shoes, built exclusively for speed. The Adizero Takumi Sen 10 have been designed with two layers of LIGHTSTRIKE PRO cushioning, combined with ENERGYRODS for stiff and snappy toe-offs as you transition from corners to straights', 1, 7),
+('GIÀY ADIDAS POWER 2A', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/x-crazyfast-3-fg-mau-xanh-da-troi-gy7428-06-standard.jpg?v=1700021188237', 140000, 'Giày thể thao nam Adidas', 'The layered midsole combines our high performance foam, LIGHTSTRIKE PRO and LIGHTSTRIKE 2.0. Engineered to deliver a cushioned and dynamic ride', 1, 1),
+('GIÀY ADIDAS WHISPER 2B', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/giay-x-plrboost-mau-xanh-da-troi-id9574-06-standard.jpg?v=1698893640633', 150000, 'Giày chạy bộ nam Adidas', 'They bring a race-day feel to training with a propulsive feel that comes from the glass-fibre infused ENERGYRODS 2.0, which limit energy loss underfoot. They're fast, but that does not come at the cost of durabilitym', 1, 6),
+('GIÀY ADIDAS EXO 2C', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/giay-ultrabounce-trang-id2243-06-standard.jpg?v=1698049878507', 160000, 'Giày thể thao nam Adidas', 'Take on your tempo training runs with a comfortable fit. Experience the targeted support of engineered mesh zones that provide both mid-foot lockdown and forefoot flexibilitym', 1, 1),
+('GIÀY ADIDAS PLUS 2D', 'https://bizweb.dktcdn.net/thumb/1024x1024/100/340/361/products/x-plrboost-shoes-grey-id9587-06-standard.jpg?v=1688092829353', 170000, 'Giày chạy bộ nam Adidas', 'A holistic system designed for a transition from heel to toe, bringing race-day performance to intense training runs', 1, 7),
+('GIÀY CONVERSE X GOLF', 'https://www.converse.vn/media/catalog/product/cache/e81e4f913a1cad058ef66fea8e95c839/0/8/0882-CONA11214C00T08H-1.jpg', 180000, 'Giày thời trang Converse', 'Winter Men\'s Snow Boots', 4, 15),
+('GIÀY CONVERSE X ONE STAR', 'https://www.converse.vn/media/catalog/product/cache/e81e4f913a1cad058ef66fea8e95c839/0/8/0882-CONA09555C00509H-1.jpg', 180000, 'Giày thời trang Converse', 'Winter Men\'s Snow Boots', 4, 15),
+('GIÀY CONVERSE FUTURE FORZ', 'https://www.converse.vn/media/catalog/product/cache/1361a5fa2136490ab0bb297f837f6217/0/8/0882-CON172895C005006-3.jpg', 180000, 'Giày thể thao Converse', 'Comfortable Sports Shoes', 4, 15),
+('GIÀY NIKE DOWNSHIFTER', 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/f33f1c05-2f08-42f7-8843-33796d32c4e4/downshifter-13-road-running-shoes-4Gw85J.png', 140000, 'Giày đi chơi tết', 'Whether you're starting your running journey or an expert eager to switch up your pace, the Downshifter 13 is down for the ride', 2, 1),
+('GIÀY NIKE REVOLUTION 7', 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/8bdc4ff8-faa5-43e9-8636-58b18f33db54/revolution-7-road-running-shoes-NNc8Ll.png', 130000, 'Giày thể thao Nike', 'Men Hiking Shoes', 2, 15),
+('GIÀY NIKE MOTIVA', 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/94341311-2775-4950-ba7e-83c397a73349/revolution-7-road-running-shoes-Ws2ZGl.png', 180000, 'Giày đi bộ Nike', 'Winter Men\'s Snow Boots', 2, 15),
+('GIÀY BITIS BASIC BSM', 'https://product.hstatic.net/1000230642/product/bsm000600trg__4__94266f8069ff4ac49686105f0b2bdd2c_large.jpg', 190000, 'Giày thể thao Bitis', 'Giày thể thao thông dụng nam Bitis Basic BSM000600 được xem là mẫu giày quốc dân chưa bao giờ ngừng hots', 3, 17),
+('GIÀY BITIS ACOOL 2', 'https://product.hstatic.net/1000230642/product/bsm002300den10_631d35c6807a4bca879ea055182400db_large.jpg', 165000, 'Giày đi bộ Bitis', 'Mens Skid Resistant Hiking Shoes', 3, 19),
+('GIÀY BITIS GOSTO X', 'https://product.hstatic.net/1000230642/product/gsm000200den10_15b37896739441448c7f3c1e3d57077f_large.jpg', 185000, 'Giày thời trang Bitis', 'NEW Spring White Shoes', 3, 18),
+('GIÀY NIKE VICTORY PROTO', 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/3ce68078-d40e-4e44-b847-9eb5c1463584/victory-2-proto-athletics-distance-spikes-lFBThc.png', 200000, 'Giày bóng đá nam', 'Winter Outdoor Waterproof Shoes', 2, 1),
+('GIÀY CONVERSE CHUCK X', 'https://www.converse.vn/media/catalog/product/cache/e81e4f913a1cad058ef66fea8e95c839/0/8/0882-CONA05591CQR0003-1.jpg', 100000, 'Giày thời trang Converse', 'Men\'s Fashion Casual Shoes', 4, 6),
+('GIÀY CONVERSE RUN STAR', 'https://www.converse.vn/media/catalog/product/cache/1361a5fa2136490ab0bb297f837f6217/0/8/0882-CON168816C000003-2.jpg', 120000, 'Giày thể thao Converse', 'Men\'s Skid Resistant Shoes', 4, 7),
+('GIÀY BITIS FUTSAL DMSH', 'https://product.hstatic.net/1000230642/product/giay-bong-da-nam-hunter-football-futsal-dsmh11100doo-do-4max6-color-do_674871fb05bf4542b60b2cf17b26081a_large.jpg', 140000, 'Giày bóng đá nam Bitis', 'Men\'s Modern Classic Shoes', 3, 1),
+('GIÀY BITIS SWING FLY', 'https://product.hstatic.net/1000230642/product/ay-bong-da-nam-biti-s-hunter-football-dsmh09600cam-cam-v4suh-color-cam_a81bf61d42434afcb93e6d783f746f72_large.jpg', 120000, 'Giày bóng đá nam Bitis', 'Men\'s Outdoors Boots', 3, 7);
+
+CREATE TABLE Category (
+    cid INT PRIMARY KEY,
+    cname VARCHAR(255)
+);
+
+insert into Category (cid, cname)values
+(1,'GIÀY ADIDAS'),(2, 'GIÀY NIKE'),(3, 'GIÀY BITIS'), (4,'GIÀY CONVERSE');
+
+
+
+CREATE TABLE Account (
+    uID INT AUTO_INCREMENT PRIMARY KEY,
+    user VARCHAR(50),
+    pass VARCHAR(50),
+    isSell BOOLEAN,
+    isAdmin BOOLEAN
+);
+
+
+INSERT INTO Account (user, pass, isSell, isAdmin) VALUES
+('Adam', '123456', 1, 0),
+('Anjolie', 'SNZ6HE', 0, 1),
+('Ferris', 'RXH3XJ', 0, 1),
+('Katell', 'HVW8ZN', 0, 1),
+('Zahir', 'NPX7OF', 1, 0),
+('Conan', 'W1Z5VZ', 1, 0),
+('Cade', 'ZSW2LU', 1, 0),
+('Micah', 'RVV5SR', 0, 0),
+('Rowan', 'VAI6XR', 1, 0),
+('Kirby', 'DNX6JK', 1, 0),
+('Tanisha', 'XWU7JP', 0, 1),
+('Howard', 'TSR5MR', 0, 1),
+('Tana', 'EHS8CM', 0, 0),
+('Hadassah', 'YOY7ZW', 1, 0),
+('Robin', 'KI9SAF', 1, 0),
+('Dominique', 'IKV0IX', 0, 0),
+('admin', '123', 1, 1),
+('mra', 'mra', 0, 0),
+('mrb', '123', 0, 0);
