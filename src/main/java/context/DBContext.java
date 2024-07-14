@@ -25,7 +25,7 @@ public class DBContext {
      private final String dbName = "WISH";
      private final String portNumber = "3306";
      private final String userID = "root";
-     private final String password = "giabaovip123";
+     private final String password = "";
      
 //     public static void main(String[] args) throws ClassNotFoundException, SQLException {
 //    	 Connection connection = null;

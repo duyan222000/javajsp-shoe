@@ -15,6 +15,41 @@ public class DAO {
 	Connection conn = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
+	
+	public List<Product> getProductsByPage(int page, int pageSize) {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM product LIMIT ? OFFSET ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getString(5),
+                        rs.getString(6)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int getTotalProductCount() {
+        String query = "SELECT COUNT(*) FROM product";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
 	public List<Product> getAllProduct() {
 		List<Product> list = new ArrayList<>();
