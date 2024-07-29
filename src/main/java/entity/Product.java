@@ -8,6 +8,9 @@ public class Product {
 	private String title;
 	private String description;
 	
+	// Add avgRating 
+//	private double avgRating;
+	
 	public Product() {
 		// TODO Auto-generated constructor stub
 	}
@@ -20,6 +23,7 @@ public class Product {
 		this.price = price;
 		this.title = title;
 		this.description = description;
+//		this.avgRating = avgRating;
 	}
 	public int getId() {
 		return id;
@@ -57,6 +61,13 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+//	public double getAvgRating() {
+//        return avgRating;
+//    }
+//
+//    public void setAvgRating(double avgRating) {
+//        this.avgRating = avgRating;
+//    }
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", title=" + title

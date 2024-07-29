@@ -41,6 +41,12 @@
                                         <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
                                     </h4>
                                     <p class="card-text show_txt">${o.title}</p>
+                                    <%-- <p class="card-text">Average Rating: <span style="color: red;">${o.avgRating}</span></p> --%>
+                                    <p class="card-text">
+                                        Average Rating: <span style="color: red;">
+                                        <c:out value="${avgRatings[o.id]}"/>
+                                        </span>
+                                    </p>
                                     <div class="row">
                                         <div class="col">
                                             <p class="btn btn-danger btn-block">${o.price}$</p>

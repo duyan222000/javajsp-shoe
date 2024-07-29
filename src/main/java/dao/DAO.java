@@ -9,7 +9,9 @@ import java.util.List;
 import context.DBContext;
 import entity.Account;
 import entity.Category;
+import entity.Comment;
 import entity.Product;
+import entity.Rating;
 
 public class DAO {
 	Connection conn = null;
@@ -34,6 +36,34 @@ public class DAO {
 		}
 		return list;
 	}
+//	public List<Product> getAllProduct() {
+//	    List<Product> list = new ArrayList<>();
+//	    String query = "SELECT p.id, p.name, p.image, p.price, p.title, p.description, "
+//	                 + "(SELECT AVG(r.rating) FROM Rating r WHERE r.product_id = p.id) AS avgRating "
+//	                 + "FROM product p";
+//	    try {
+//	        conn = new DBContext().getConnection();
+//	        ps = conn.prepareStatement(query);
+//	        rs = ps.executeQuery();
+//
+//	        while (rs.next()) {
+//	            Product product = new Product();
+//	            product.setId(rs.getInt("id"));
+//	            product.setName(rs.getString("name"));
+//	            product.setImage(rs.getString("image"));
+//	            product.setPrice(rs.getDouble("price"));
+//	            product.setTitle(rs.getString("title"));
+//	            product.setDescription(rs.getString("description"));
+//	            product.setAvgRating(rs.getDouble("avgRating")); // Giả sử bạn đã thêm getter và setter cho avgRating trong Product
+//
+//	            list.add(product);
+//	        }
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	    }
+//	    return list;
+//	}
+
 
 	public List<Product> getProductsByPage(int page, int pageSize) {
         List<Product> list = new ArrayList<>();
@@ -363,9 +393,6 @@ public class DAO {
             e.printStackTrace();
         }
     }
-
-	
-
 	
     public void updateAccount(String user, String pass, int isSell, int isAdmin, String id) {
         String query = "UPDATE account SET user = ?, pass = ?, isSell = ?, isAdmin = ? WHERE uID = ?";
@@ -382,7 +409,6 @@ public class DAO {
             e.printStackTrace();
         }
     }
-    
 
     public void deleteAccount(String id) {
         String query = "DELETE FROM account WHERE uID = ?";
@@ -396,7 +422,90 @@ public class DAO {
         }
     }
 
-	
+	// Rating and Comment DAO
+    public List<Rating> getRatingsByProductId(int productId) {
+        List<Rating> list = new ArrayList<>();
+        String query = "SELECT * FROM Rating WHERE productId = ?";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Rating(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Comment> getCommentsByProductId(int productId) {
+        List<Comment> list = new ArrayList<>();
+        String query = "SELECT * FROM Comment WHERE productId = ? ORDER BY createdDate DESC";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Comment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getTimestamp(5)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void addRating(int productId, int userId, int rating) {
+        String query = "INSERT INTO Rating(productId, userId, rating) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rating=?";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            ps.setInt(2, userId);
+            ps.setInt(3, rating);
+            ps.setInt(4, rating); // Cập nhật nếu đã tồn tại
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addComment(int productId, int userId, String comment) {
+        String query = "INSERT INTO Comment(productId, userId, comment) VALUES (?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            ps.setInt(2, userId);
+            ps.setString(3, comment);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public double getAverageRating(int productId) {
+        double avgRating = 0;
+        String query = "SELECT AVG(rating) FROM Rating WHERE productId = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                avgRating = rs.getDouble(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return avgRating;
+    }
+
+
+    
+    
 	
 	public static void main(String[] args) {
 		DAO dao = new DAO();
