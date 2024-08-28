@@ -14,6 +14,7 @@ import entity.Cart;
 import entity.CartItem;
 import entity.Category;
 import entity.Comment;
+import entity.Orders;
 import entity.Product;
 import entity.Rating;
 
@@ -577,7 +578,29 @@ public class DAO {
         }
     }
     
-    
+    public List<Orders> getAllOrders() {
+        List<Orders> list = new ArrayList<>();
+        String query = "SELECT * FROM Orders";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Orders order = new Orders();
+                order.setOrderID(rs.getInt("orderID"));
+                order.setUserID(rs.getInt("userID"));
+                order.setName(rs.getString("name"));
+                order.setPhone(rs.getString("phone"));
+                order.setCouponID(rs.getInt("couponID"));
+                order.setOrderDate(rs.getTimestamp("orderDate"));
+                order.setTotalAmount(rs.getDouble("totalAmount"));
+                list.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 	
 	public static void main(String[] args) {
 		DAO dao = new DAO();

@@ -14,6 +14,8 @@ public class Orders {
     private Timestamp orderDate;
     private double totalAmount;
 
+    public Orders() {}
+    
     public Orders(int orderID, int userID, String name, String phone, int couponID, Timestamp orderDate, double totalAmount) {
         this.orderID = orderID;
         this.userID = userID;
