@@ -14,6 +14,7 @@ import entity.Cart;
 import entity.CartItem;
 import entity.Category;
 import entity.Comment;
+import entity.OrderDetails;
 import entity.Orders;
 import entity.Product;
 import entity.Rating;
@@ -601,6 +602,54 @@ public class DAO {
         }
         return list;
     }
+    
+    public Orders getOrderById(int orderID) {
+        Orders order = null;
+        String query = "SELECT * FROM Orders WHERE orderID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    order = new Orders();
+                    order.setOrderID(rs.getInt("orderID"));
+                    order.setUserID(rs.getInt("userID"));
+                    order.setName(rs.getString("name"));
+                    order.setPhone(rs.getString("phone"));
+                    order.setCouponID(rs.getInt("couponID"));
+                    order.setOrderDate(rs.getTimestamp("orderDate"));
+                    order.setTotalAmount(rs.getDouble("totalAmount"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+
+    public List<OrderDetails> getOrderDetailsByOrderId(int orderID) {
+        List<OrderDetails> list = new ArrayList<>();
+        String query = "SELECT * FROM OrderDetails WHERE orderID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderDetails detail = new OrderDetails();
+                    detail.setOrderID(rs.getInt("orderID"));
+                    detail.setProductID(rs.getInt("productID"));
+                    detail.setQuantity(rs.getInt("quantity"));
+                    detail.setPrice(rs.getDouble("price"));
+                    list.add(detail);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    
 	
 	public static void main(String[] args) {
 		DAO dao = new DAO();
