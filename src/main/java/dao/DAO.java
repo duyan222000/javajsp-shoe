@@ -3,11 +3,15 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import context.DBContext;
 import entity.Account;
+import entity.Cart;
+import entity.CartItem;
 import entity.Category;
 import entity.Comment;
 import entity.Product;
@@ -503,7 +507,75 @@ public class DAO {
         return avgRating;
     }
 
+    public int getCouponIdByName(String couponName) {
+        String query = "SELECT couponID FROM Coupon WHERE code = ?";
+        try {
+            conn = new DBContext().getConnection(); // Mở kết nối đến cơ sở dữ liệu
+            ps = conn.prepareStatement(query);
+            ps.setString(1, couponName);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("couponID"); // Trả về couponID nếu tìm thấy
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không tìm thấy coupon
+    }
+    
+    public int saveOrder(int userID, String name, String phone, int couponID, double totalAmount) {
+        String query = "INSERT INTO Orders (userID, name, phone, couponID, totalAmount) VALUES (?, ?, ?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection(); // Mở kết nối đến cơ sở dữ liệu
+            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, userID);         // Thiết lập giá trị cho trường userID
+            ps.setString(2, name);        // Thiết lập giá trị cho trường name
+            ps.setString(3, phone);       // Thiết lập giá trị cho trường phone
+            ps.setInt(4, couponID);       // Thiết lập giá trị cho trường couponID
+            ps.setDouble(5, totalAmount);       // Thiết lập giá trị cho trường totalAmount
+            ps.executeUpdate();
 
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1); // Trả về khóa chính của đơn hàng mới
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không thành công
+    }
+
+
+//    public void saveOrderDetails(int orderId, int productId, int quantity, double totalPrice) {
+//        String query = "INSERT INTO OrderDetails (orderID, productID, quantity, price) VALUES (?, ?, ?, ?)";
+//        try {
+//            conn = new DBContext().getConnection();
+//            ps = conn.prepareStatement(query);
+//            ps.setInt(1, orderId);
+//            ps.setInt(2, productId);
+//            ps.setInt(3, quantity);
+//            ps.setDouble(4, totalPrice);
+//            ps.executeUpdate();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    public void saveOrderDetails(int orderID, Cart cart) {
+        String query = "INSERT INTO OrderDetails (orderID, productID, quantity, price) VALUES (?, ?, ?, ?)";
+        try (Connection conn = new DBContext().getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            for (CartItem item : cart.getItems()) {
+                ps.setInt(1, orderID);
+                ps.setInt(2, item.getProduct().getId());
+                ps.setInt(3, item.getQuantity());
+                ps.setDouble(4, item.getProduct().getPrice());
+                ps.addBatch();
+            }
+            ps.executeBatch(); // Thực hiện tất cả các câu lệnh chèn
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     
 	

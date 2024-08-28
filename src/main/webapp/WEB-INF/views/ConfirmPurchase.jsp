@@ -29,9 +29,8 @@
 </head>
 <body>
     <div class="message">
-    	<p><strong>${name}</strong>, thank you for using our service!</p>
-        <p>The system has recorded the order. Once again, thank you for your trust and ordering here.</p>
-        <p style="font-style: italic; font-weight: 100; color: #888;">Please do not forget to check your email for updates and order tracking.</p>
+    	<p><strong>Thank you for using our service!</p>
+        <p style="font-style: italic; font-weight: 100; color: #888;">The system has recorded the order. Once again, thank you for your trust and ordering here!</p>
     </div>
     <a href="home">Back to Home</a>
 </body>

@@ -38,13 +38,18 @@
                 </table>
                 
                 <form action="confirmPurchase" method="post">
+                	<input type="hidden" name="totalAmount" value="${sessionScope.cart.totalPrice}">
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" class="form-control" id="email" name="email" required>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="couponName">Coupon Name:</label>
+                        <input type="text" class="form-control" id="couponName" name="couponName">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone:</label>
@@ -60,7 +65,7 @@
             </c:when>
             <c:otherwise>
                 <div class="alert alert-warning" role="alert">
-                    Your cart is empty. <a href="productList">Go to Products</a>
+                    Your cart is empty! Return to <a href="home"> Homepage </a> to select products!
                 </div>
             </c:otherwise>
         </c:choose>
