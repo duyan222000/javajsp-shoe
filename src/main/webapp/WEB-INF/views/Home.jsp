@@ -14,6 +14,13 @@
 </head>
 <body>
     <jsp:include page="Menu.jsp"></jsp:include>
+    <section class="jumbotron text-center">
+		<div class="container">
+			<h1 class="jumbotron-heading">Shop giày chất lượng cao và đa dạng</h1>
+			<p class="lead text-muted mb-0">Uy tín tạo nên thương hiệu với hơn
+				10 năm cung cấp các sản phầm giày nhập từ các brand nổi tiếng thế giới</p>
+		</div>
+	</section>
     <div class="container">
         <div class="row">
             <div class="col">

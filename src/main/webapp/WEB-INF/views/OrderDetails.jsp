@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+	<jsp:include page="Menu.jsp"></jsp:include>
     <div class="container">
         <h2 class="my-4 text-center">Order Details</h2>
         <div>

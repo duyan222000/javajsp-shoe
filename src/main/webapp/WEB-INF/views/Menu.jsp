@@ -22,6 +22,10 @@
 					<li class="nav-item"><a class="nav-link" href="manager">Manager
 							Product</a></li>
 				</c:if>
+				<c:if test="${sessionScope.acc.isAdmin == 1}">
+					<li class="nav-item"><a class="nav-link" href="adminOrders">Manager
+							Orders</a></li>
+				</c:if>
 				<c:if test="${sessionScope.acc != null}">
 					<li class="nav-item"><a class="nav-link" href="#">Hello
 							${sessionScope.acc.user}</a></li>
@@ -53,11 +57,11 @@
 		</div>
 	</div>
 </nav>
-<section class="jumbotron text-center">
+<!-- <section class="jumbotron text-center">
 	<div class="container">
 		<h1 class="jumbotron-heading">Shop giày chất lượng cao và đa dạng</h1>
 		<p class="lead text-muted mb-0">Uy tín tạo nên thương hiệu với hơn
 			10 năm cung cấp các sản phầm giày nhập từ các brand nổi tiếng thế giới</p>
 	</div>
-</section>
+</section> -->
 <!--end of menu-->

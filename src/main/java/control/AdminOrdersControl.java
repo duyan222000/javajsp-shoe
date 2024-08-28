@@ -19,12 +19,32 @@ import entity.Orders;
 public class AdminOrdersControl extends HttpServlet {
     private DAO dao = new DAO(); // Tạo đối tượng DAO
 
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		
+		List<Orders> ordersList = dao.getAllOrders();
+        request.setAttribute("ordersList", ordersList);
+        request.getRequestDispatcher("/WEB-INF/views/AdminOrders.jsp").forward(request, response);
+    }
+//    @Override
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//
+//        List<Orders> ordersList = dao.getAllOrders();
+//        request.setAttribute("ordersList", ordersList);
+//        request.getRequestDispatcher("/WEB-INF/views/AdminOrders.jsp").forward(request, response);
+//    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        processRequest(request, response);
+    }
 
-        List<Orders> ordersList = dao.getAllOrders();
-        request.setAttribute("ordersList", ordersList);
-        request.getRequestDispatcher("/WEB-INF/views/AdminOrders.jsp").forward(request, response);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 }
