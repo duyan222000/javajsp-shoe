@@ -649,6 +649,30 @@ public class DAO {
         return list;
     }
     
+    public List<Orders> getOrdersByUserId(int userID) {
+        List<Orders> list = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE userID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Orders order = new Orders();
+                    order.setOrderID(rs.getInt("orderID"));
+                    order.setUserID(rs.getInt("userID"));
+                    order.setName(rs.getString("name"));
+                    order.setPhone(rs.getString("phone"));
+                    order.setCouponID(rs.getInt("couponID"));
+                    order.setOrderDate(rs.getTimestamp("orderDate"));
+                    order.setTotalAmount(rs.getDouble("totalAmount"));
+                    list.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     
 	
 	public static void main(String[] args) {

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.DAO;
 import entity.Account;
@@ -25,15 +26,36 @@ public class LoadAccountControl extends HttpServlet {
 		
 		response.setContentType("text/html;charset=UTF-8");
 		
-		String id = request.getParameter("aid");
-		System.out.println(id);
-		DAO dao = new DAO();
-		Account account = dao.getAccountByID(id);
-		System.out.println(account);
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+        if (user != null) {
+            if (user.getIsAdmin() == 1 ) {
+            	String id = request.getParameter("aid");
+        		System.out.println(id);
+        		Account account = dao.getAccountByID(id);
+        		System.out.println(account);
+        		
+//        		request.setAttribute("detail", a);
+        		request.setAttribute("detail", account);
+        		request.getRequestDispatcher("/WEB-INF/views/EditUser.jsp").forward(request, response);
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
 		
-//		request.setAttribute("detail", a);
-		request.setAttribute("detail", account);
-		request.getRequestDispatcher("/WEB-INF/views/EditUser.jsp").forward(request, response);
+//		String id = request.getParameter("aid");
+//		System.out.println(id);
+//		DAO dao = new DAO();
+//		Account account = dao.getAccountByID(id);
+//		System.out.println(account);
+//		
+////		request.setAttribute("detail", a);
+//		request.setAttribute("detail", account);
+//		request.getRequestDispatcher("/WEB-INF/views/EditUser.jsp").forward(request, response);
 		
 	}
 

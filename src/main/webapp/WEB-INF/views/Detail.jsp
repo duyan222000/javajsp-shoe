@@ -50,6 +50,8 @@
 </head>
 <body>
 	<jsp:include page="Menu.jsp"></jsp:include>
+	<br/>
+	<br/>
 	<div class="container">
 		<div class="row">
 			<jsp:include page="Left.jsp"></jsp:include>

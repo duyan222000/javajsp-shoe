@@ -1,6 +1,8 @@
 package control;
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import dao.DAO;
 import entity.Account;
+import entity.Category;
+import entity.Product;
 
 /**
  * Servlet implementation class EditControl
@@ -22,20 +26,44 @@ public class EditControl extends HttpServlet {
 		
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
-		
-		String pid = request.getParameter("id");
-		String pname = request.getParameter("name");
-		String pimage = request.getParameter("image");
-		String pprice = request.getParameter("price");
-		String ptitle = request.getParameter("title");
-		String pdescription = request.getParameter("description");
-		String pCategory = request.getParameter("category");
-		
-		// Get data from DAO
-		DAO dao = new DAO();
-		dao.editProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, pid);
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+		if (user != null) {
+            if (user.getIsAdmin() == 1 || user.getIsSell() == 1) {
+            	String pid = request.getParameter("id");
+        		String pname = request.getParameter("name");
+        		String pimage = request.getParameter("image");
+        		String pprice = request.getParameter("price");
+        		String ptitle = request.getParameter("title");
+        		String pdescription = request.getParameter("description");
+        		String pCategory = request.getParameter("category");
+        		
+        		// Get data from DAO
+        		dao.editProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, pid);
 
-		response.sendRedirect("manager");
+        		response.sendRedirect("manager");
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
+		
+//		String pid = request.getParameter("id");
+//		String pname = request.getParameter("name");
+//		String pimage = request.getParameter("image");
+//		String pprice = request.getParameter("price");
+//		String ptitle = request.getParameter("title");
+//		String pdescription = request.getParameter("description");
+//		String pCategory = request.getParameter("category");
+//		
+//		// Get data from DAO
+//		DAO dao = new DAO();
+//		dao.editProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, pid);
+//
+//		response.sendRedirect("manager");
 	}
 
 	/**

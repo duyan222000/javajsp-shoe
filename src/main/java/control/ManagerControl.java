@@ -25,19 +25,40 @@ public class ManagerControl extends HttpServlet {
 			throws ServletException, IOException {
 		
 		response.setContentType("text/html;charset=UTF-8");
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+        if (user != null) {
+            if (user.getIsAdmin() == 1 || user.getIsSell() == 1) {
+            	int id = user.getId();
+        		List<Product> list = dao.getProductBySellID(id);
+        		List<Category> listC = dao.getAllCategory();
+        		
+        		// Push to JSP
+        		request.setAttribute("listP", list);
+        		request.setAttribute("listCC", listC);
+        		request.getRequestDispatcher("/WEB-INF/views/ManagerProduct.jsp").forward(request, response);
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
+		
 
 		// Get data from DAO
-		HttpSession session = request.getSession();
-		Account a = (Account) session.getAttribute("acc"); // var acc in session. session.getAttribute return string => TypeCasting to Account.
-		int id = a.getId();
-		DAO dao = new DAO();
-		List<Product> list = dao.getProductBySellID(id);
-		List<Category> listC = dao.getAllCategory();
-		
-		// Push to JSP
-		request.setAttribute("listP", list);
-		request.setAttribute("listCC", listC);
-		request.getRequestDispatcher("/WEB-INF/views/ManagerProduct.jsp").forward(request, response);
+//		HttpSession session = request.getSession();
+//		Account a = (Account) session.getAttribute("acc"); // var acc in session. session.getAttribute return string => TypeCasting to Account.
+//		int id = a.getId();
+//		DAO dao = new DAO();
+//		List<Product> list = dao.getProductBySellID(id);
+//		List<Category> listC = dao.getAllCategory();
+//		
+//		// Push to JSP
+//		request.setAttribute("listP", list);
+//		request.setAttribute("listCC", listC);
+//		request.getRequestDispatcher("/WEB-INF/views/ManagerProduct.jsp").forward(request, response);
 		
 	}
 

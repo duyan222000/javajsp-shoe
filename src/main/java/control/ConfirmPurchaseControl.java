@@ -29,40 +29,72 @@ public class ConfirmPurchaseControl extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
-		String name = request.getParameter("name");
-        String phone = request.getParameter("phone");
-        String couponName = request.getParameter("couponName");
-        double totalAmount = Double.parseDouble(request.getParameter("totalAmount"));
-        
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
         DAO dao = new DAO();
         
-        int couponID = dao.getCouponIdByName(couponName);
-        // Lấy đối tượng Cart từ session
-        HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
-//        if (cart == null || cart.getItems().isEmpty()) {
-//            response.sendRedirect("checkout");
-//            return;
-//        }
-		
-        Account account = (Account) session.getAttribute("acc");
-        int userID = account.getId();
-        
-        int orderID = dao.saveOrder(userID, name, phone, couponID, totalAmount);
-        
-        if (orderID > 0) {
-            // Lưu chi tiết đơn hàng
-            dao.saveOrderDetails(orderID, cart);
-            // Xóa giỏ hàng
-            session.removeAttribute("cart");
-            // Chuyển hướng đến trang xác nhận thành công
-            request.setAttribute("message", "Your order has been placed successfully!");
-            request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+        if (user != null) {
+        	String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            String couponName = request.getParameter("couponName");
+            double totalAmount = Double.parseDouble(request.getParameter("totalAmount"));
+            
+            int couponID = dao.getCouponIdByName(couponName);
+            // Lấy đối tượng Cart từ session
+            Cart cart = (Cart) session.getAttribute("cart");
+    		
+            Account account = (Account) session.getAttribute("acc");
+            int userID = account.getId();
+            
+            int orderID = dao.saveOrder(userID, name, phone, couponID, totalAmount);
+            
+            if (orderID > 0) {
+                // Lưu chi tiết đơn hàng
+                dao.saveOrderDetails(orderID, cart);
+                // Xóa giỏ hàng
+                session.removeAttribute("cart");
+                // Chuyển hướng đến trang xác nhận thành công
+                request.setAttribute("message", "Your order has been placed successfully!");
+                request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+            } else {
+                // Xử lý lỗi khi lưu đơn hàng
+                request.setAttribute("message", "Failed to place the order. Please try again.");
+                request.getRequestDispatcher("/WEB-INF/views/Home.jsp").forward(request, response);
+            }
         } else {
-            // Xử lý lỗi khi lưu đơn hàng
-            request.setAttribute("message", "Failed to place the order. Please try again.");
-            request.getRequestDispatcher("/WEB-INF/views/Home.jsp").forward(request, response);
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
         }
+		
+//		String name = request.getParameter("name");
+//        String phone = request.getParameter("phone");
+//        String couponName = request.getParameter("couponName");
+//        double totalAmount = Double.parseDouble(request.getParameter("totalAmount"));
+//        
+//        DAO dao = new DAO();
+//        
+//        int couponID = dao.getCouponIdByName(couponName);
+//        // Lấy đối tượng Cart từ session
+//        HttpSession session = request.getSession();
+//        Cart cart = (Cart) session.getAttribute("cart");
+//		
+//        Account account = (Account) session.getAttribute("acc");
+//        int userID = account.getId();
+//        
+//        int orderID = dao.saveOrder(userID, name, phone, couponID, totalAmount);
+//        
+//        if (orderID > 0) {
+//            // Lưu chi tiết đơn hàng
+//            dao.saveOrderDetails(orderID, cart);
+//            // Xóa giỏ hàng
+//            session.removeAttribute("cart");
+//            // Chuyển hướng đến trang xác nhận thành công
+//            request.setAttribute("message", "Your order has been placed successfully!");
+//            request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+//        } else {
+//            // Xử lý lỗi khi lưu đơn hàng
+//            request.setAttribute("message", "Failed to place the order. Please try again.");
+//            request.getRequestDispatcher("/WEB-INF/views/Home.jsp").forward(request, response);
+//        }
 		
 		
 		
