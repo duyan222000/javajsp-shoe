@@ -15,23 +15,7 @@
 
 		</ul>
 	</div>
-	<%-- <div class="card bg-light mb-3">
-		<div class="card-header bg-success text-white text-uppercase">Last
-			product</div>
-		<div class="card-body">
-			<img class="img-fluid" src="${p.image}" />
-			<h5 class="card-title">${p.name}</h5>
-			<p class="card-text">${p.title}</p>
-			<p class="bloc_left_price">${p.price}$</p>
-		</div>
-	</div> --%>
-	<!-- <div class="card bg-light mb-3">
-    <div class="card-header bg-warning text-white text-uppercase">Advertisement</div>
-    <div class="card-body">
-        Hình ảnh mô phỏng quảng cáo
-        <img class="img-fluid" src="https://via.placeholder.com/300x250" alt="Ad Placeholder" />
-        <p class="card-text">This is a mockup advertisement banner.</p>
-    </div> -->
+
     <div>
     <div class="card bg-light mb-3" style="border: 0; width: 260px; height: 560px;">
     <div class="card-header bg-warning text-white text-uppercase" style="padding: 0.75rem; text-align: center;">
@@ -56,25 +40,5 @@
     </div>
 </div>
 
-<!-- 	<div class="card bg-light mb-3" style="border: 0pt; display: inline-block; width: 300px; height: 600px;">
-		<div class="card-header bg-warning text-white text-uppercase">Advertisement</div>
-        <div class="card-body text-center">
-            <a href="https://playdisneyemoji.com" target="_blank">
-                <img src="https://www.pikpng.com/pngl/m/605-6055112_vertical-banner-png-online-advertising-clipart.png" alt="Vertical Banner Png - Online Advertising Clipart@pikpng.com">
-            </a>
-        </div>
-
-	</div> -->
-	
-    <!-- <div class="card bg-light mb-3">
-        <div class="card-header bg-info text-white text-uppercase">Advertisement</div>
-        <div class="card-body ">
-            Đặt liên kết đến quảng cáo
-            <a href="https://www.example.com" target="_blank">
-                Ví dụ quảng cáo với hình ảnh GIF
-                <img class="img-fluid" src="https://media.giphy.com/media/3o7aD3P4Fegrm4PQw4/giphy.gif" alt="Advertisement" style="max-width: 100%; height: auto;">
-            </a>
-        </div>
-    </div> --> 
     
 </div>
