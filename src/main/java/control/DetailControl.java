@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.DAO;
 import entity.Category;
+import entity.Comment;
 import entity.Product;
+import entity.Rating;
 
 /**
  * Servlet implementation class DetailControl
@@ -37,14 +39,30 @@ public class DetailControl extends HttpServlet {
 		List<Category> listC = dao.getAllCategory();
 		Product last = dao.getLast();
 		
-		// Step 2: Push data to JSP page
+		// Get ratings and comments for product
+        List<Rating> ratings = dao.getRatingsByProductId(Integer.parseInt(id));
+        List<Comment> comments = dao.getCommentsByProductId(Integer.parseInt(id));
+        
+        // AVG rating 
+        double avgRating = dao.getAverageRating(Integer.parseInt(id));
+        
+        //
 		
+		// Step 2: Push data to JSP page
 		request.setAttribute("detail", p);
 		request.setAttribute("listP", list);
 		request.setAttribute("listCC", listC);
 		request.setAttribute("p", last);
+		request.setAttribute("ratings", ratings);
+        request.setAttribute("comments", comments);
+        request.setAttribute("avgRating", avgRating);
+        
 		request.getRequestDispatcher("/WEB-INF/views/Detail.jsp").forward(request, response);
+		
+		// Push ratings and comments to JSP page
 
+		
+		
 		// 404 -> url
 		// 500 -> jsp properties
 	}

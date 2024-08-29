@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.DAO;
 import entity.Account;
@@ -24,39 +25,69 @@ public class EditAccountControl extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
-		
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		
-		String aid = request.getParameter("id");
-		String auser = request.getParameter("username");
-		String apass = request.getParameter("password");
-		String isSellParam = request.getParameter("isSell");
-		String isAdminParam = request.getParameter("isAdmin");
-		
-		int aisSell = 0;
-		int aisAdmin = 0;
-//		int aisSell = Integer.parseInt(request.getParameter("isSell"));
-//		int aisAdmin = Integer.parseInt(request.getParameter("isAdmin"));
-		
-		try {
-			if (isSellParam != null && !isSellParam.isEmpty()) {
-				aisSell = Integer.parseInt(isSellParam);
-			}
-			
-			if (isAdminParam != null && !isAdminParam.isEmpty()) {
-				aisAdmin = Integer.parseInt(isAdminParam);
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			// Handle the error, e.g., set default values or return an error response
-		}
-		
-		// Get data from DAO
-		DAO dao = new DAO();
-		dao.updateAccount(auser, apass,aisSell, aisAdmin,  aid);
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+        if (user != null) {
+            if (user.getIsAdmin() == 1 ) {
+            	String aid = request.getParameter("id");
+        		String auser = request.getParameter("username");
+        		String apass = request.getParameter("password");
+        		String isSellParam = request.getParameter("isSell");
+        		String isAdminParam = request.getParameter("isAdmin");
+        		
+        		int aisSell = 0;
+        		int aisAdmin = 0;
+        		
+        		try {
+        			if (isSellParam != null && !isSellParam.isEmpty()) {
+        				aisSell = Integer.parseInt(isSellParam);
+        			}
+        			
+        			if (isAdminParam != null && !isAdminParam.isEmpty()) {
+        				aisAdmin = Integer.parseInt(isAdminParam);
+        			}
+        		} catch (NumberFormatException e) {
+        			e.printStackTrace();
+        		}
+        		
+        		dao.updateAccount(auser, apass,aisSell, aisAdmin,  aid);
 
-		response.sendRedirect("managerAccount");
+        		response.sendRedirect("managerAccount");
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
+		
+		
+//		String aid = request.getParameter("id");
+//		String auser = request.getParameter("username");
+//		String apass = request.getParameter("password");
+//		String isSellParam = request.getParameter("isSell");
+//		String isAdminParam = request.getParameter("isAdmin");
+//		
+//		int aisSell = 0;
+//		int aisAdmin = 0;
+//		
+//		try {
+//			if (isSellParam != null && !isSellParam.isEmpty()) {
+//				aisSell = Integer.parseInt(isSellParam);
+//			}
+//			
+//			if (isAdminParam != null && !isAdminParam.isEmpty()) {
+//				aisAdmin = Integer.parseInt(isAdminParam);
+//			}
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		}
+//
+//		DAO dao = new DAO();
+//		dao.updateAccount(auser, apass,aisSell, aisAdmin,  aid);
+//
+//		response.sendRedirect("managerAccount");
     }
 
     @Override

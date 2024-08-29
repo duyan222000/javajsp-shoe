@@ -3,13 +3,21 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import context.DBContext;
 import entity.Account;
+import entity.Cart;
+import entity.CartItem;
 import entity.Category;
+import entity.Comment;
+import entity.OrderDetails;
+import entity.Orders;
 import entity.Product;
+import entity.Rating;
 
 public class DAO {
 	Connection conn = null;
@@ -34,7 +42,70 @@ public class DAO {
 		}
 		return list;
 	}
+//	public List<Product> getAllProduct() {
+//	    List<Product> list = new ArrayList<>();
+//	    String query = "SELECT p.id, p.name, p.image, p.price, p.title, p.description, "
+//	                 + "(SELECT AVG(r.rating) FROM Rating r WHERE r.product_id = p.id) AS avgRating "
+//	                 + "FROM product p";
+//	    try {
+//	        conn = new DBContext().getConnection();
+//	        ps = conn.prepareStatement(query);
+//	        rs = ps.executeQuery();
+//
+//	        while (rs.next()) {
+//	            Product product = new Product();
+//	            product.setId(rs.getInt("id"));
+//	            product.setName(rs.getString("name"));
+//	            product.setImage(rs.getString("image"));
+//	            product.setPrice(rs.getDouble("price"));
+//	            product.setTitle(rs.getString("title"));
+//	            product.setDescription(rs.getString("description"));
+//	            product.setAvgRating(rs.getDouble("avgRating")); // Giả sử bạn đã thêm getter và setter cho avgRating trong Product
+//
+//	            list.add(product);
+//	        }
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	    }
+//	    return list;
+//	}
 
+
+	public List<Product> getProductsByPage(int page, int pageSize) {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM product LIMIT ? OFFSET ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getString(5),
+                        rs.getString(6)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public int getTotalProductCount() {
+        String query = "SELECT COUNT(*) FROM product";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+	
 	public List<Category> getAllCategory() {
 		List<Category> list = new ArrayList<>();
 		String query = "select * from Category";
@@ -72,7 +143,7 @@ public class DAO {
 	public List<Product> getProductByCID(String cid) {
 		List<Product> list = new ArrayList<>();
 //    	String query = "select * from product where cateID = "+cid;  WORK OK
-		String query = "select * from product where cateID = ?";
+		String query = "select * from product where cateID = ? order by name asc";
 
 		try {
 			conn = new DBContext().getConnection(); // Open connection to SQL
@@ -328,9 +399,6 @@ public class DAO {
             e.printStackTrace();
         }
     }
-
-	
-
 	
     public void updateAccount(String user, String pass, int isSell, int isAdmin, String id) {
         String query = "UPDATE account SET user = ?, pass = ?, isSell = ?, isAdmin = ? WHERE uID = ?";
@@ -347,7 +415,6 @@ public class DAO {
             e.printStackTrace();
         }
     }
-    
 
     public void deleteAccount(String id) {
         String query = "DELETE FROM account WHERE uID = ?";
@@ -361,7 +428,252 @@ public class DAO {
         }
     }
 
-	
+	// Rating and Comment DAO
+    public List<Rating> getRatingsByProductId(int productId) {
+        List<Rating> list = new ArrayList<>();
+        String query = "SELECT * FROM Rating WHERE productId = ?";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Rating(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Comment> getCommentsByProductId(int productId) {
+        List<Comment> list = new ArrayList<>();
+        String query = "SELECT * FROM Comment WHERE productId = ? ORDER BY createdDate DESC";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Comment(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getString(4), rs.getTimestamp(5)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void addRating(int productId, int userId, int rating) {
+        String query = "INSERT INTO Rating(productId, userId, rating) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rating=?";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            ps.setInt(2, userId);
+            ps.setInt(3, rating);
+            ps.setInt(4, rating); // Cập nhật nếu đã tồn tại
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addComment(int productId, int userId, String comment) {
+        String query = "INSERT INTO Comment(productId, userId, comment) VALUES (?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection(); 
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            ps.setInt(2, userId);
+            ps.setString(3, comment);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public double getAverageRating(int productId) {
+        double avgRating = 0;
+        String query = "SELECT AVG(rating) FROM Rating WHERE productId = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, productId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                avgRating = rs.getDouble(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return avgRating;
+    }
+
+    public int getCouponIdByName(String couponName) {
+        String query = "SELECT couponID FROM Coupon WHERE code = ?";
+        try {
+            conn = new DBContext().getConnection(); // Mở kết nối đến cơ sở dữ liệu
+            ps = conn.prepareStatement(query);
+            ps.setString(1, couponName);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("couponID"); // Trả về couponID nếu tìm thấy
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không tìm thấy coupon
+    }
+    
+    public int saveOrder(int userID, String name, String phone, int couponID, double totalAmount) {
+        String query = "INSERT INTO Orders (userID, name, phone, couponID, totalAmount) VALUES (?, ?, ?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection(); // Mở kết nối đến cơ sở dữ liệu
+            ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, userID);         // Thiết lập giá trị cho trường userID
+            ps.setString(2, name);        // Thiết lập giá trị cho trường name
+            ps.setString(3, phone);       // Thiết lập giá trị cho trường phone
+            ps.setInt(4, couponID);       // Thiết lập giá trị cho trường couponID
+            ps.setDouble(5, totalAmount);       // Thiết lập giá trị cho trường totalAmount
+            ps.executeUpdate();
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1); // Trả về khóa chính của đơn hàng mới
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1; // Trả về -1 nếu không thành công
+    }
+
+
+//    public void saveOrderDetails(int orderId, int productId, int quantity, double totalPrice) {
+//        String query = "INSERT INTO OrderDetails (orderID, productID, quantity, price) VALUES (?, ?, ?, ?)";
+//        try {
+//            conn = new DBContext().getConnection();
+//            ps = conn.prepareStatement(query);
+//            ps.setInt(1, orderId);
+//            ps.setInt(2, productId);
+//            ps.setInt(3, quantity);
+//            ps.setDouble(4, totalPrice);
+//            ps.executeUpdate();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    public void saveOrderDetails(int orderID, Cart cart) {
+        String query = "INSERT INTO OrderDetails (orderID, productID, quantity, price) VALUES (?, ?, ?, ?)";
+        try (Connection conn = new DBContext().getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            for (CartItem item : cart.getItems()) {
+                ps.setInt(1, orderID);
+                ps.setInt(2, item.getProduct().getId());
+                ps.setInt(3, item.getQuantity());
+                ps.setDouble(4, item.getProduct().getPrice());
+                ps.addBatch();
+            }
+            ps.executeBatch(); // Thực hiện tất cả các câu lệnh chèn
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public List<Orders> getAllOrders() {
+        List<Orders> list = new ArrayList<>();
+        String query = "SELECT * FROM Orders";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Orders order = new Orders();
+                order.setOrderID(rs.getInt("orderID"));
+                order.setUserID(rs.getInt("userID"));
+                order.setName(rs.getString("name"));
+                order.setPhone(rs.getString("phone"));
+                order.setCouponID(rs.getInt("couponID"));
+                order.setOrderDate(rs.getTimestamp("orderDate"));
+                order.setTotalAmount(rs.getDouble("totalAmount"));
+                list.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public Orders getOrderById(int orderID) {
+        Orders order = null;
+        String query = "SELECT * FROM Orders WHERE orderID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    order = new Orders();
+                    order.setOrderID(rs.getInt("orderID"));
+                    order.setUserID(rs.getInt("userID"));
+                    order.setName(rs.getString("name"));
+                    order.setPhone(rs.getString("phone"));
+                    order.setCouponID(rs.getInt("couponID"));
+                    order.setOrderDate(rs.getTimestamp("orderDate"));
+                    order.setTotalAmount(rs.getDouble("totalAmount"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return order;
+    }
+
+    public List<OrderDetails> getOrderDetailsByOrderId(int orderID) {
+        List<OrderDetails> list = new ArrayList<>();
+        String query = "SELECT * FROM OrderDetails WHERE orderID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderDetails detail = new OrderDetails();
+                    detail.setOrderID(rs.getInt("orderID"));
+                    detail.setProductID(rs.getInt("productID"));
+                    detail.setQuantity(rs.getInt("quantity"));
+                    detail.setPrice(rs.getDouble("price"));
+                    list.add(detail);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public List<Orders> getOrdersByUserId(int userID) {
+        List<Orders> list = new ArrayList<>();
+        String query = "SELECT * FROM Orders WHERE userID = ?";
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Orders order = new Orders();
+                    order.setOrderID(rs.getInt("orderID"));
+                    order.setUserID(rs.getInt("userID"));
+                    order.setName(rs.getString("name"));
+                    order.setPhone(rs.getString("phone"));
+                    order.setCouponID(rs.getInt("couponID"));
+                    order.setOrderDate(rs.getTimestamp("orderDate"));
+                    order.setTotalAmount(rs.getDouble("totalAmount"));
+                    list.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
 	
 	public static void main(String[] args) {
 		DAO dao = new DAO();

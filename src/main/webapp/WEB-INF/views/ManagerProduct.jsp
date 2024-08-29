@@ -22,6 +22,7 @@
             }
         </style>
     <body>
+    	<jsp:include page="Menu.jsp"></jsp:include>
         <div class="container">
             <div class="table-wrapper">
                 <div class="table-title">

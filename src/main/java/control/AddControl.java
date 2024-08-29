@@ -26,23 +26,50 @@ public class AddControl extends HttpServlet {
 		
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
-		
-		String pname = request.getParameter("name");
-		String pimage = request.getParameter("image");
-		String pprice = request.getParameter("price");
-		String ptitle = request.getParameter("title");
-		String pdescription = request.getParameter("description");
-		String pCategory = request.getParameter("category");
-		// Get sell_ID: ID of seller
 		HttpSession session = request.getSession();
-		Account a = (Account) session.getAttribute("acc");
-		int sid = a.getId();
-		
-		// Get data from DAO
-		DAO dao = new DAO();
-		dao.insertProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, sid);
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+        if (user != null) {
+            if (user.getIsAdmin() == 1 || user.getIsSell() == 1 ) {
 
-		response.sendRedirect("manager");
+        		String pname = request.getParameter("name");
+        		String pimage = request.getParameter("image");
+        		String pprice = request.getParameter("price");
+        		String ptitle = request.getParameter("title");
+        		String pdescription = request.getParameter("description");
+        		String pCategory = request.getParameter("category");
+        		// Get sell_ID: ID of seller
+        		int sid = user.getId();
+        		
+        		// Get data from DAO
+        		dao.insertProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, sid);
+
+        		response.sendRedirect("manager");
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
+		
+//		
+//		String pname = request.getParameter("name");
+//		String pimage = request.getParameter("image");
+//		String pprice = request.getParameter("price");
+//		String ptitle = request.getParameter("title");
+//		String pdescription = request.getParameter("description");
+//		String pCategory = request.getParameter("category");
+//		// Get sell_ID: ID of seller
+//		HttpSession session = request.getSession();
+//		Account a = (Account) session.getAttribute("acc");
+//		int sid = a.getId();
+//		
+//		// Get data from DAO
+//		DAO dao = new DAO();
+//		dao.insertProduct(pname, pimage, pprice, ptitle, pdescription, pCategory, sid);
+//
+//		response.sendRedirect("manager");
 	}
 
 	/**

@@ -25,15 +25,36 @@ public class LoadControl extends HttpServlet {
 			throws ServletException, IOException {
 		
 		response.setContentType("text/html;charset=UTF-8");
-		String id = request.getParameter("pid");
-		DAO dao = new DAO();
-		Product p = dao.getProductByID(id);
-		List<Category> listC = dao.getAllCategory();
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+		if (user != null) {
+            if (user.getIsAdmin() == 1 || user.getIsSell() == 1) {
+            	String id = request.getParameter("pid");
+        		Product p = dao.getProductByID(id);
+        		List<Category> listC = dao.getAllCategory();
+        		
+        		
+        		request.setAttribute("detail", p);
+        		request.setAttribute("listCC", listC);
+        		request.getRequestDispatcher("/WEB-INF/views/Edit.jsp").forward(request, response);
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
 		
-		
-		request.setAttribute("detail", p);
-		request.setAttribute("listCC", listC);
-		request.getRequestDispatcher("/WEB-INF/views/Edit.jsp").forward(request, response);
+//		String id = request.getParameter("pid");
+//		DAO dao = new DAO();
+//		Product p = dao.getProductByID(id);
+//		List<Category> listC = dao.getAllCategory();
+//		
+//		
+//		request.setAttribute("detail", p);
+//		request.setAttribute("listCC", listC);
+//		request.getRequestDispatcher("/WEB-INF/views/Edit.jsp").forward(request, response);
 		
 	}
 

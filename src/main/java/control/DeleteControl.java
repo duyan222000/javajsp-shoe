@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.DAO;
 import entity.Account;
+import entity.Category;
 import entity.Product;
 
 /**
@@ -24,12 +25,27 @@ public class DeleteControl extends HttpServlet {
 			throws ServletException, IOException {
 		
 		response.setContentType("text/html;charset=UTF-8");
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+		
+		if (user != null) {
+            if (user.getIsAdmin() == 1 || user.getIsSell() == 1) {
+            	String pid = request.getParameter("pid");
+        		dao.deleteProduct(pid);
+        		response.sendRedirect("manager"); // Parameter here is the URL Pattern: /manager 		
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
 
 		// Get data from DAO
-		String pid = request.getParameter("pid");
-		DAO dao = new DAO();
-		dao.deleteProduct(pid);
-		response.sendRedirect("manager"); // Parameter here is the URL Pattern: /manager 		
+//		String pid = request.getParameter("pid");
+//		DAO dao = new DAO();
+//		dao.deleteProduct(pid);
+//		response.sendRedirect("manager"); // Parameter here is the URL Pattern: /manager 		
 	}
 
 	/**

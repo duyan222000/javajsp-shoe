@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.DAO;
+import entity.Account;
+import entity.Cart;
+import entity.CartItem;
 import entity.Category;
 import entity.Product;
 
@@ -27,15 +30,82 @@ public class ConfirmPurchaseControl extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 		HttpSession session = request.getSession();
-		session.removeAttribute("cart");
+        Account user = (Account) session.getAttribute("acc"); 
+        DAO dao = new DAO();
+        
+        if (user != null) {
+        	String name = request.getParameter("name");
+            String phone = request.getParameter("phone");
+            String couponName = request.getParameter("couponName");
+            double totalAmount = Double.parseDouble(request.getParameter("totalAmount"));
+            
+            int couponID = dao.getCouponIdByName(couponName);
+            // Lấy đối tượng Cart từ session
+            Cart cart = (Cart) session.getAttribute("cart");
+    		
+            Account account = (Account) session.getAttribute("acc");
+            int userID = account.getId();
+            
+            int orderID = dao.saveOrder(userID, name, phone, couponID, totalAmount);
+            
+            if (orderID > 0) {
+                // Lưu chi tiết đơn hàng
+                dao.saveOrderDetails(orderID, cart);
+                // Xóa giỏ hàng
+                session.removeAttribute("cart");
+                // Chuyển hướng đến trang xác nhận thành công
+                request.setAttribute("message", "Your order has been placed successfully!");
+                request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+            } else {
+                // Xử lý lỗi khi lưu đơn hàng
+                request.setAttribute("message", "Failed to place the order. Please try again.");
+                request.getRequestDispatcher("/WEB-INF/views/Home.jsp").forward(request, response);
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
 		
-		String _name = request.getParameter("name");
+//		String name = request.getParameter("name");
+//        String phone = request.getParameter("phone");
+//        String couponName = request.getParameter("couponName");
+//        double totalAmount = Double.parseDouble(request.getParameter("totalAmount"));
+//        
+//        DAO dao = new DAO();
+//        
+//        int couponID = dao.getCouponIdByName(couponName);
+//        // Lấy đối tượng Cart từ session
+//        HttpSession session = request.getSession();
+//        Cart cart = (Cart) session.getAttribute("cart");
+//		
+//        Account account = (Account) session.getAttribute("acc");
+//        int userID = account.getId();
+//        
+//        int orderID = dao.saveOrder(userID, name, phone, couponID, totalAmount);
+//        
+//        if (orderID > 0) {
+//            // Lưu chi tiết đơn hàng
+//            dao.saveOrderDetails(orderID, cart);
+//            // Xóa giỏ hàng
+//            session.removeAttribute("cart");
+//            // Chuyển hướng đến trang xác nhận thành công
+//            request.setAttribute("message", "Your order has been placed successfully!");
+//            request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+//        } else {
+//            // Xử lý lỗi khi lưu đơn hàng
+//            request.setAttribute("message", "Failed to place the order. Please try again.");
+//            request.getRequestDispatcher("/WEB-INF/views/Home.jsp").forward(request, response);
+//        }
+		
+		
+		
+		
+//		String _name = request.getParameter("name");
 //        String email = request.getParameter("email");
 //        String phone = request.getParameter("phone");
 		
-        request.setAttribute("name", _name);
+//        request.setAttribute("name", _name);
 		
-		request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
+//		request.getRequestDispatcher("/WEB-INF/views/ConfirmPurchase.jsp").forward(request, response);
 		
 	}
 

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.DAO;
 import entity.Account;
@@ -24,17 +25,36 @@ public class AddAcountControl extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		
-		
-		
-		String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        int isSell = Integer.parseInt(request.getParameter("isSell"));
-        int isAdmin = Integer.parseInt(request.getParameter("isAdmin"));
-        
+		HttpSession session = request.getSession();
+        Account user = (Account) session.getAttribute("acc"); 
         DAO dao = new DAO();
-        dao.addAccount(username, password, isSell, isAdmin);
+        
+        if (user != null) {
+            if (user.getIsAdmin() == 1 ) {
+            	String username = request.getParameter("username");
+                String password = request.getParameter("password");
+                int isSell = Integer.parseInt(request.getParameter("isSell"));
+                int isAdmin = Integer.parseInt(request.getParameter("isAdmin"));
 
-        response.sendRedirect("managerAccount");
+                dao.addAccount(username, password, isSell, isAdmin);
+
+                response.sendRedirect("managerAccount");
+            } else {
+            	request.getRequestDispatcher("/WEB-INF/views/AccessDenied.jsp").forward(request, response); // Chuyển hướng đến trang từ chối truy cập
+            }
+        } else {
+            response.sendRedirect("login"); // Chuyển hướng đến trang đăng nhập
+        }
+		
+//		String username = request.getParameter("username");
+//        String password = request.getParameter("password");
+//        int isSell = Integer.parseInt(request.getParameter("isSell"));
+//        int isAdmin = Integer.parseInt(request.getParameter("isAdmin"));
+//        
+//        DAO dao = new DAO();
+//        dao.addAccount(username, password, isSell, isAdmin);
+//
+//        response.sendRedirect("managerAccount");
     }
 
     @Override

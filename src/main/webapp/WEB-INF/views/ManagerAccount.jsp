@@ -14,9 +14,13 @@
     <link href="css/manager.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
+	
+	<jsp:include page="Menu.jsp"></jsp:include>
     <div class="container">
+    	<br/>
         <div class="table-wrapper">
             <div class="table-title">
+            	
                 <div class="row">
                     <div class="col-sm-6">
                         <h2>Manage <b>Accounts</b></h2>

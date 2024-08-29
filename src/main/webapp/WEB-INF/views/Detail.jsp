@@ -50,6 +50,8 @@
 </head>
 <body>
 	<jsp:include page="Menu.jsp"></jsp:include>
+	<br/>
+	<br/>
 	<div class="container">
 		<div class="row">
 			<jsp:include page="Left.jsp"></jsp:include>
@@ -85,31 +87,12 @@
 										<dd>
 											<p>${detail.description}</p>
 										</dd>
+										<p>Average Rating: <span style="color: red;">${avgRating}</span></p>
 									</dl>
 
 									<hr>
-									<div class="row">
-										<div class="col-sm-5">
-											<dl class="param param-inline">
-												<dt>Quantity:</dt>
-												<dd>
-													<select class="form-control form-control-sm"
-														style="width: 70px;">
-														<option>1</option>
-														<option>2</option>
-														<option>3</option>
-													</select>
-												</dd>
-											</dl>
-											<!-- item-property .// -->
-										</div>
-										<!-- col.// -->
-
-									</div>
-									<!-- row.// -->
-									<hr>
-									<a href="#" class="btn btn-lg btn-primary text-uppercase">
-										Buy now </a> <a href="#"
+									<a href="addtocart?productId=${detail.id}" class="btn btn-lg btn-primary text-uppercase">
+										Buy now </a> <a href="addtocart?productId=${detail.id}"
 										class="btn btn-lg btn-outline-primary text-uppercase"> <i
 										class="fas fa-shopping-cart"></i> Add to cart
 									</a>
@@ -121,7 +104,52 @@
 						<!-- row.// -->
 					</div>
 					<!-- card.// -->
-
+					<div>
+						<br>
+						<br>
+						
+						<div>
+						    <h4 style="border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #333;">Comments</h4>
+						    <c:forEach items="${comments}" var="comment">
+						        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+						            <p style="font-weight: bold; color: #333;">User ${comment.userId}</p>
+						            <p style="margin: 5px 0; color: #555;">${comment.comment}</p>
+						            <p style="font-style: italic; color: #888; margin-top: 10px;">${comment.createdDate}</p>
+						        </div>
+						    </c:forEach>
+						</div>
+						
+						
+						<br>
+						
+						
+						
+						<!-- <h3 style="text-align: left; margin-bottom: 20px;">Add comment and rating here</h3> -->
+						<h3 style="border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #333;">Add comment and rating here</h3>
+						<form action="addComment" method="post" style="padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; max-width: 600px;">
+						    <input type="hidden" name="productId" value="${detail.id}">
+						    
+						    <div style="margin-bottom: 15px;">
+						        <label for="rating" style="display: block; margin-bottom: 5px; font-weight: bold;">Rating:</label>
+						        <select name="rating" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;">
+						            <option value="1">1</option>
+						            <option value="2">2</option>
+						            <option value="3">3</option>
+						            <option value="4">4</option>
+						            <option value="5">5</option>
+						        </select>
+						    </div>
+						    
+						    <div style="margin-bottom: 15px;">
+						        <label for="comment" style="display: block; margin-bottom: 5px; font-weight: bold;">Comment:</label>
+						        <textarea name="comment" rows="4" placeholder="Comment here ..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"></textarea>
+						    </div>
+						    
+						    <button type="submit" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Submit</button>
+						</form>
+						
+						
+					</div>
 
 				</div>
 			</div>
@@ -129,4 +157,5 @@
 	</div>
 	<jsp:include page="Footer.jsp"></jsp:include>
 </body>
+
 </html>

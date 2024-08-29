@@ -15,18 +15,26 @@
 			id="navbarsExampleDefault">
 			<ul class="navbar-nav m-auto">
 				<c:if test="${sessionScope.acc.isAdmin == 1}">
-					<li class="nav-item"><a class="nav-link" href="managerAccount">Manager
+					<li class="nav-item"><a class="nav-link" href="managerAccount">Manage
 							Account</a></li>
 				</c:if>
 				<c:if test="${sessionScope.acc.isSell == 1}">
-					<li class="nav-item"><a class="nav-link" href="manager">Manager
+					<li class="nav-item"><a class="nav-link" href="manager">Manage
 							Product</a></li>
 				</c:if>
+				<c:if test="${sessionScope.acc.isAdmin == 1}">
+					<li class="nav-item"><a class="nav-link" href="adminOrders">Manage
+							Orders</a></li>
+				</c:if>
+				<c:if test="${sessionScope.acc != null && sessionScope.acc.isAdmin == 0}">
+					<li class="nav-item"><a class="nav-link" href="orderHistory">Order History</a></li>
+				</c:if>
+				
 				<c:if test="${sessionScope.acc != null}">
 					<li class="nav-item"><a class="nav-link" href="#">Hello
-							${sessionScope.acc.user}</a></li>
-					<li class="nav-item"><a class="nav-link" href="logout">Logout</a>
-					</li>
+							${sessionScope.acc.user}</a></li> 
+					<li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
+					<!-- <li class="nav-item"><a class="nav-link" href="orderHistory">Order History</a></li> -->
 				</c:if>
 				<c:if test="${sessionScope.acc == null}">
 					<li class="nav-item"><a class="nav-link" href="login">Login</a>
@@ -45,19 +53,23 @@
 						</button>
 					</div>
 				</div>
-				<a class="btn btn-success btn-sm ml-3" href="cart"> <i
+				<a class="btn btn-success btn-sm ml-1" href="cart"> <i
 					class="fa fa-shopping-cart"></i> Cart <span
+					class="badge badge-light"></span>
+				</a>
+				<a class="btn btn-success btn-sm ml-1" href="cart"> <i
+					class="fa fa-receipt"></i> Checkout <span
 					class="badge badge-light"></span>
 				</a>
 			</form>
 		</div>
 	</div>
 </nav>
-<section class="jumbotron text-center">
+<!-- <section class="jumbotron text-center">
 	<div class="container">
 		<h1 class="jumbotron-heading">Shop giày chất lượng cao và đa dạng</h1>
 		<p class="lead text-muted mb-0">Uy tín tạo nên thương hiệu với hơn
 			10 năm cung cấp các sản phầm giày nhập từ các brand nổi tiếng thế giới</p>
 	</div>
-</section>
+</section> -->
 <!--end of menu-->
