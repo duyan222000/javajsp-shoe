@@ -16,6 +16,8 @@
     </style>
 </head>
 <body>
+<jsp:include page="Menu.jsp"></jsp:include>
+<br/>
 <div class="container">
     <h2>Shopping Cart</h2>
     <c:if test="${empty cart.items}">
